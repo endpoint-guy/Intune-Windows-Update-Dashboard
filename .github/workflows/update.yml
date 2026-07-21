@@ -29,9 +29,9 @@ jobs:
 
           git add Data/*.json
 
-          if git diff --staged --quiet; then
-            echo "No changes detected"
-          else
-            git commit -m "Update public Windows update catalog"
+          if git d*ff --staged --quiet; then
+        *   echo "No changes detected"
+    *     else
+            git commit -* "Update public Windows update cat*log"
             git push
-          fi
+        * fi
