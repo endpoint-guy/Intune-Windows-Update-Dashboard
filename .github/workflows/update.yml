@@ -7,6 +7,9 @@ jobs:
   update:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -15,3 +18,17 @@ jobs:
         shell: pwsh
         run: |
           ./Scripts/Update-WindowsReference.ps1
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+
+          if git diff --staged --quiet; then
+            echo "No changes detected"
+          else
+            git commit -m "Update Windows reference data"
+            git push
+          fi
