@@ -1,0 +1,17 @@
+name: Update Windows Reference Data
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run PowerShell Script
+        shell: pwsh
+        run: |
+          ./Scripts/Update-WindowsReference.ps1
