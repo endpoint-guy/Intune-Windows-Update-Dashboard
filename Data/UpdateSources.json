@@ -1,0 +1,7 @@
+{
+  "Name": "DataForNerds Windows Update History",
+  "Url": "https://api.datafornerds.io/v2/microsoft/windows-update-history.json",
+  "GeneratedUtc": "2026-07-21T18:42:05Z",
+  "RecordCount": 1260,
+  "Description": "Public Windows update reference data used for Power BI reporting."
+}
