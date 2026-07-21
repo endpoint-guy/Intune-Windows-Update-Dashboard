@@ -29,7 +29,7 @@ function ConvertFrom-HtmlText {
         [string]$Text
     )
 
-    if (:IsNullOrWhiteSpace($Text)) {
+    if ([stringOrWhiteSpace($Text)) {
         return $null
     }
 
@@ -78,11 +78,16 @@ function Get-ReleaseDateFromText {
     )
 
     $DatePattern = "(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}"
-    $Match = :Match($Text, $DatePattern, "IgnoreCase")
+
+    $Match = [System.Text.RegularExpressions.Regex]::Match(
+        $Text,
+        $DatePattern,
+        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+    )
 
     if ($Match.Success) {
         try {
-            return (:Parse($Match.Value)).ToString("yyyy-MM-dd")
+            return ([datetime]::Parse($Match.Value)).yyy-MM-dd")
         }
         catch {
             return $null
@@ -97,7 +102,10 @@ function Get-BuildsFromText {
         [string]$Text
     )
 
-    $BuildMatches = :Matches($Text, "\b\d{5}\.\d{3,5}\b")
+    $BuildMatches = [System.Text.RegularExpressions.Regex]::Matches(
+        $Text,
+        "\b\d{5}\.\d{3,5}\b"
+    )
 
     $Builds = foreach ($Match in $BuildMatches) {
         $Match.Value
@@ -115,7 +123,7 @@ foreach ($Source in $UpdateSources) {
     $Response = Invoke-WebRequest -Uri $Source.Url -UseBasicParsing
     $Html = $Response.Content
 
-    $AnchorMatches = :Matches(
+    $AnchorMatches = [System.Text.RegularExpressions.Regex]::Matches(
         $Html,
         '<a[^>]+href="(?<href>[^"]+)"[^>]*>(?<text>.*?)</a>',
         [System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor
@@ -147,7 +155,7 @@ foreach ($Source in $UpdateSources) {
             $DetailResponse = Invoke-WebRequest -Uri $Link.Url -UseBasicParsing
             $DetailHtml = $DetailResponse.Content
 
-            $TitleMatch = :Match(
+            $TitleMatch = [System.Text.RegularExpressions.Regex]::Match(
                 $DetailHtml,
                 "<title>(?<title>.*?)</title>",
                 [System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor
@@ -163,7 +171,10 @@ foreach ($Source in $UpdateSources) {
 
             $CombinedText = "$($Link.Title) $PageTitle"
 
-            $KbMatch = :Match($CombinedText, "(?i)KB\d{6,8}")
+            $KbMatch = [System.Text.RegularExpressions.Regex]::Match(
+                $CombinedText,
+                "(?i)KB\d{6,8}"
+            )
 
             if (-not $KbMatch.Success) {
                 continue
